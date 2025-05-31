@@ -1,0 +1,1572 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard • BPay</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        a { text-decoration: none; color: inherit; }
+
+        /* --- Top Banner / Slider --- */
+        .top-banner {
+            background: #fff;
+            padding: 10px 0;
+            text-align: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .top-banner img.logo {
+            height: 32px;
+        }
+        .slider {
+            position: relative;
+            overflow: hidden;
+            margin: 16px auto 0;
+            width: 90%; 
+            border-radius: 8px;
+        }
+        .slides-wrapper {
+            position: relative;
+        }
+        .slide {
+            display: none;
+            background-size: cover;
+            background-position: center;
+            width: 100%;
+            height: 300px;
+        }
+        .slide.active { display: block; }
+
+        .slider-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.8);
+            border: none;
+            font-size: 24px;
+            padding: 4px 8px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .slider-arrow.prev { left: 8px; }
+        .slider-arrow.next { right: 8px; }
+
+        /* Dots */
+        .dots {
+            position: absolute;
+            bottom: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 6px;
+        }
+        .dot {
+            width: 8px;
+            height: 8px;
+            background: rgba(255,255,255,0.8);
+            border-radius: 50%;
+            cursor: pointer;
+            opacity: 0.6;
+        }
+        .dot.active {
+            background: #fff;
+            opacity: 1;
+        }
+
+        /* --- Card Section --- */
+        .card {
+            background:#fff;
+            margin: 16px auto;
+            padding: 16px;
+            width:90%;
+            border-radius:12px;
+            box-shadow:0 4px 12px rgba(0,0,0,0.05);
+        }
+        .card-header {
+            display:flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .card-header h3 {
+            margin:0; font-size:18px; color:#333;
+        }
+        .card-header .recharge-btn {
+            background:#3366ff;
+            color:#fff;
+            padding:8px 12px;
+            border:none;
+            border-radius:6px;
+            cursor:pointer;
+        }
+        .card-body {
+            margin-top:12px;
+            font-size:14px;
+            color:#666;
+        }
+        .card-body .rate {
+            margin-top:4px; font-size:12px;
+            color:#999;
+        }
+
+        /* --- Info Row --- */
+        .info-row {
+            display:flex;
+            justify-content: space-between;
+            margin: 16px auto;
+            width:90%;
+        }
+        .info-item {
+            background:#fff;
+            flex:1;
+            margin:0 4px;
+            padding:16px;
+            border-radius:12px;
+            text-align:center;
+            box-shadow:0 4px 12px rgba(0,0,0,0.03);
+        }
+        .info-item h4 {
+            margin:0 0 8px; font-size:16px; color:#333;
+        }
+        .info-item p {
+            margin:0; font-size:14px; color:#666;
+        }
+
+        /* --- News Section --- */
+        .news-card {
+            background:#fff;
+            margin: 0 auto 80px;
+            width:90%;
+            padding:16px;
+            border-radius:12px;
+            box-shadow:0 4px 12px rgba(0,0,0,0.03);
+            font-size:14px;
+            color:#333;
+        }
+        .news-card h4 { margin:0 0 8px; }
+
+        /* --- Bottom Nav --- */
+        .bottom-nav {
+            position:fixed;
+            bottom:0; left:0; right:0;
+            background:#fff;
+            display:flex;
+            justify-content: space-around;
+            padding:8px 0;
+            box-shadow:0 -1px 3px rgba(0,0,0,0.1);
+        }
+        .bottom-nav a {
+            flex:1;
+            text-align:center;
+            color:#333;
+            font-size:12px;
+        }
+        .bottom-nav a.active { color:#3366ff; }
+        .bottom-nav img { height:24px; display:block; margin:0 auto 4px; }
+        
+       /* News Section */
+.news-card {
+    background: #fff;
+    margin: 0 auto 80px;
+    width: 90%;
+    padding: 16px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    font-size: 14px;
+    color: #333;
+    height: 200px; /* Adjust height as necessary */
+    overflow: hidden; /* Hide content that's off-screen */
+    position: relative;
+}
+
+.news-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column; /* Arrange items vertically */
+    transition: transform 0.5s ease-in-out; /* Smooth transition */
+}
+
+.news-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    background-color: #f9f9f9;
+    opacity: 0; /* Initially, the new items will be invisible */
+    animation: slide-in 0.5s forwards; /* Slide in from the top */
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+strong {
+    font-size: 16px;
+}
+
+/* Animation for sliding the new item in */
+@keyframes slide-in {
+    0% {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+
+
+
+    </style>
+</head>
+<body>
+
+<!-- Top Banner with Slider -->
+<div class="top-banner">
+    <img src="images/logo.png" class="logo" alt="BPay">
+    <div class="slider">
+        <div class="slides-wrapper">
+            <div class="slide active" style="background-image: url('images/slider1.jpg');"></div>
+            <div class="slide" style="background-image: url('images/slider2.jpg');"></div>
+            <div class="slide" style="background-image: url('images/slider3.jpg');"></div>
+        </div>
+        <button class="slider-arrow prev">&larr;</button>
+        <button class="slider-arrow next">&rarr;</button>
+        <div class="dots"></div>
+    </div>
+</div>
+
+<!-- Total Assets Card -->
+<div class="card">
+    <div class="card-header">
+        <h3>Total Assets</h3>
+        <button class="recharge-btn" onclick="window.location.href='transaction_history.php';">Recharge</button>
+    </div>
+    <div class="card-body">
+        <strong>0.00 USDT</strong>
+        <div class="rate">
+            <small>1 USDT ≈ 93.00 INR </small>
+        </div>
+    </div>
+</div>
+
+<!-- Today Received / Today Profit -->
+<div class="info-row">
+    <div class="info-item">
+        <h4>Today Received</h4>
+        <p>0.00 USDT</p>
+    </div>
+    <div class="info-item">
+        <h4>Today Profit</h4>
+        <p>0.00 USDT</p>
+    </div>
+</div>
+
+<!-- Winning Information Section (Auto-scrolling) -->
+<div class="news-card">
+    <h4>Recent Payments</h4>
+    <ul class="news-list" id="winning-info">
+        <!-- Dynamic List will be populated here -->
+    </ul>
+</div>
+
+
+
+
+<!-- Bottom Navigation -->
+<div class="bottom-nav">
+    <a href="home.php" class="active">
+        <img src="https://img.icons8.com/sf-black-filled/64/228BE6/home.png" alt="Home">
+        <span>Home</span>
+    </a>
+    <a href="transaction_history.php">
+        <img src="https://img.icons8.com/external-sbts2018-lineal-color-sbts2018/58/228BE6/external-add-money-ecommerce-basic-1-sbts2018-lineal-color-sbts2018.png" alt="Transaction">
+        <span>Transaction</span>
+    </a>
+    <a href="payment.php">
+        <img src="https://img.icons8.com/external-kmg-design-glyph-kmg-design/32/228BE6/external-withdraw-finance-2-kmg-design-glyph-kmg-design.png" alt="Payment">
+        <span>Payment</span>
+    </a>
+    <a href="profile.php">
+        <img src="https://img.icons8.com/ios-glyphs/30/228BE6/user--v1.png" alt="Me">
+        <span>Me</span>
+    </a>
+</div>
+
+<script>
+    // Function to generate random INR amounts for winning info
+    function getRandomAmount() {
+        return (Math.random() * (100000 - 1000) + 1000).toFixed(2); // Random amount between ₹1000 and ₹100000
+    }
+
+    // Function to generate random phone-like usernames (e.g., Mem***GJU)
+    function getRandomUsername() {
+        const phonePrefix = '98938';
+        const randomSuffix = Math.floor(Math.random() * 10000) + 10000; // Generates a number between 10000 and 99999
+        return 'Mem***' + randomSuffix;  // Format: 98938xxxxx
+    }
+
+    // Function to generate random profile picture path
+    function getProfilePicture() {
+        return 'assets/icons/user-circle.png'; // Static profile image
+    }
+
+    // Function to append new winning information at the top with animation
+    function addWinningInformation() {
+        const winningInfo = document.getElementById('winning-info');
+        
+        // Create a new list item
+        const newItem = document.createElement('li');
+        newItem.classList.add('news-item');
+        newItem.innerHTML = `
+            <div class="user-info">
+                <img src="${getProfilePicture()}" alt="User Profile" class="user-avatar">
+                <strong>${getRandomUsername()}</strong>
+            </div>
+            <p>Paid amount ₹${getRandomAmount()}</p>
+        `;
+        
+        // Insert the new item at the top
+        winningInfo.insertBefore(newItem, winningInfo.firstChild);  // Insert at the top
+        
+        // Add animation to make the new entry appear smoothly
+        newItem.classList.add('slide-in'); 
+
+        // Remove the last item to maintain the limit of 5 items
+        if (winningInfo.children.length > 5) {
+            winningInfo.removeChild(winningInfo.lastChild);  // Remove the last item
+        }
+    }
+
+    // Add new winning information every 3 seconds
+    setInterval(addWinningInformation, 3000);  // Adjust timing as needed (3000ms = 3 seconds)
+</script>
+
+
+
+
+<script>
+    const slides = document.querySelectorAll('.slide');
+    const prevBtn = document.querySelector('.slider-arrow.prev');
+    const nextBtn = document.querySelector('.slider-arrow.next');
+    const dotsContainer = document.querySelector('.dots');
+    let current = 0;
+
+    slides.forEach((_, idx) => {
+        const dot = document.createElement('div');
+        dot.classList.add('dot');
+        if (idx === 0) dot.classList.add('active');
+        dot.addEventListener('click', () => goToSlide(idx));
+        dotsContainer.append(dot);
+    });
+    const dots = document.querySelectorAll('.dot');
+
+    function updateSlides() {
+        slides.forEach(s => s.classList.remove('active'));
+        dots.forEach(d => d.classList.remove('active'));
+        slides[current].classList.add('active');
+        dots[current].classList.add('active');
+    }
+
+    function goToSlide(idx) {
+        current = idx;
+        updateSlides();
+    }
+
+    prevBtn.addEventListener('click', () => {
+        current = (current - 1 + slides.length) % slides.length;
+        updateSlides();
+    });
+    nextBtn.addEventListener('click', () => {
+        current = (current + 1) % slides.length;
+        updateSlides();
+    });
+
+    setInterval(() => {
+        current = (current + 1) % slides.length;
+        updateSlides();
+    }, 5000);
+</script>
+
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Transactions • XPay</title>
+  <style>
+    /*--- Reset & Base ---*/
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:Arial,sans-serif;background:#f4f6fa;color:#333;padding-bottom:80px;}
+    a{text-decoration:none;color:inherit;}
+
+    /*--- Header ---*/
+    .app-header {
+      width:100%; background:#fff; padding:16px 0;
+      display:flex; justify-content:center; align-items:center;
+      box-shadow:0 1px 4px rgba(0,0,0,0.1); margin-bottom:16px;
+    }
+    .app-logo { height:40px; }
+
+    /*--- Stats ---*/
+    .stats-row { display:flex; gap:12px; padding:0 16px 16px; }
+    .stat-card {
+      flex:1; background:#fff; border-radius:12px; padding:12px;
+      text-align:center; box-shadow:0 2px 6px rgba(0,0,0,0.05);
+    }
+    .label { font-size:14px; color:#777; }
+    .value { font-size:24px; color:#3366FF; margin:4px 0; }
+    .sub   { font-size:12px; color:#aaa; }
+
+    /*--- Exchange Form ---*/
+    .exchange-card {
+      background:#fff; border-radius:12px; padding:16px;
+      margin:0 16px 16px; box-shadow:0 2px 6px rgba(0,0,0,0.05);
+    }
+    .exchange-tabs { display:flex; gap:4px; margin-bottom:12px; }
+    .exchange-tabs button {
+      flex:1; padding:8px 0; border:none; border-radius:8px;
+      background:#f0f0f0; color:#555; cursor:pointer;
+    }
+    .exchange-tabs button.active {
+      background:#3366FF; color:#fff;
+    }
+    .rate { font-size:14px; color:#999; margin-bottom:12px; }
+    .input-group {
+      display:flex; align-items:center; background:#f9f9f9;
+      border-radius:8px; padding:8px; margin-bottom:8px;
+    }
+    .input-group .icon { height:24px; margin-right:8px; }
+    .input-group input {
+      border:none; flex:1; font-size:16px; background:transparent; outline:none;
+    }
+    .approx { font-size:14px; color:#666; margin-bottom:16px; }
+    .btn-primary {
+      width:100%; padding:12px; background:#3366FF; border:none;
+      border-radius:8px; color:#fff; font-size:16px; cursor:pointer;
+    }
+    .btn-primary:hover { background:#254eb8; }
+
+    /*--- Flash ---*/
+    .pending-msg {
+      padding:16px; margin:0 16px; background:#fff;
+      border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.05);
+    }
+
+    /*--- Modal ---*/
+    .modal-overlay {
+      position:fixed; top:0; left:0; right:0; bottom:0;
+      background:rgba(0,0,0,0.4); display:none;
+      align-items:center; justify-content:center; z-index:10;
+    }
+    .modal-content {
+      background:#fff; border-radius:12px; padding:16px;
+      width:90%; max-width:360px; box-shadow:0 4px 12px rgba(0,0,0,0.15);
+      text-align:center;
+    }
+    .modal-content .message {
+      background:#fff4e5; color:#a65a00;
+      border-radius:8px; padding:12px; margin-bottom:12px;
+    }
+    .modal-content .qr img { max-width:200px; margin:12px 0; }
+    .modal-content .wallet {
+      display:flex; align-items:center; justify-content:center; margin:8px 0;
+    }
+    .modal-content .wallet span {
+      font-family:monospace; overflow-wrap:anywhere; margin-right:8px;
+    }
+    .modal-content .wallet button {
+      padding:4px 8px; font-size:12px; border:none;
+      background:#3366FF; color:#fff; border-radius:4px; cursor:pointer;
+    }
+    .modal-content .timer { font-family:monospace; margin:8px 0; }
+    .modal-content .notes {
+      text-align:left; font-size:12px; color:#c00; margin-top:12px;
+    }
+    .modal-content .notes p { margin:4px 0; }
+    .modal-content .submit-btn,
+    .modal-content .close-btn {
+      margin-top:12px; padding:8px 16px; border:none; border-radius:8px; cursor:pointer;
+    }
+    .modal-content .submit-btn { background:#3366FF; color:#fff; }
+    .modal-content .close-btn  { background:#ccc; }
+
+    /*--- History Filter & Cards ---*/
+    .history-filter { display:flex; gap:8px; padding:0 16px; margin-bottom:8px; }
+    .history-filter button {
+      flex:1; padding:8px 0; border:none; border-radius:8px;
+      background:#f0f0f0; color:#555; cursor:pointer;
+    }
+    .history-filter button.active {
+      background:#3366FF; color:#fff;
+    }
+    .history-container { padding:0 16px 80px; }
+    .tx-card {
+      background:#fff; border-radius:8px; padding:12px 16px;
+      box-shadow:0 2px 4px rgba(0,0,0,0.05);
+      display:grid; grid-template-columns:1fr auto; align-items:center; gap:8px;
+      margin-bottom:8px;
+    }
+    .tx-info { display:flex; flex-direction:column; gap:4px; }
+    .tx-date { font-size:12px; color:#777; }
+    .tx-type { font-size:14px; font-weight:bold; text-transform:capitalize; }
+    .tx-amount { font-size:16px; color:#3366FF; text-align:right; }
+    .tx-status {
+      font-size:12px; font-weight:bold; padding:4px 8px; border-radius:8px; text-transform:capitalize;
+    }
+    .tx-status.pending  { background:#fff7e6; color:#a65a00; }
+    .tx-status.approved { background:#e6ffed; color:#237804; }
+    .tx-status.rejected { background:#ffe6e6; color:#a8071a; }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="app-header">
+    <a href="home.php">
+      <img src="images/logo.png" alt="XPay" class="app-logo">
+    </a>
+  </header>
+
+  <main>
+    <!-- STATS -->   
+    <section class="stats-row">
+      <div class="stat-card">
+        <p class="label">B Token</p>
+        <p class="value" id="stat-balance">0.00</p>
+        <p class="sub">Available</p>
+      </div>
+      <div class="stat-card">
+        <p class="label">Received</p>
+        <p class="value" id="stat-received">0.00</p>
+        <p class="sub">Completed</p>
+      </div>
+      <div class="stat-card">
+        <p class="label">Total Profit</p>
+        <p class="value" id="stat-profit">0.00</p>
+        <p class="sub">&nbsp;</p>
+      </div>
+    </section>
+
+    <!-- EXCHANGE FORM -->
+    <section class="exchange-card">
+      <div class="exchange-tabs">
+        <button class="active" data-cur="USDT">USDT</button>
+        <button          data-cur="INR">INR</button>
+      </div>
+      <!-- We’ll dynamically update this text -->  
+      <p class="rate" id="rate-line">1 USDT ≈ 93 B Token</p>
+
+      <div id="form-USDT">
+  <div class="input-group">
+    <!-- Tether icon -->
+    <img src="images/usdt-circle.svg" class="icon" alt="USDT">
+    <input
+      type="number"
+      id="usdt-input"
+      placeholder="Enter The Quantity"
+      step="0.01"
+    >
+  </div>
+        <p class="approx">≈ <span id="usdt-BPay">0.00</span> B Token</p>
+        <button class="btn-primary" id="confirm-usdt">Confirm Recharge</button>
+      </div>
+
+      <div id="form-INR" style="display:none;">
+        <div class="input-group">
+          <span class="icon" style="font-size:18px;">₹</span>
+          <input type="number" id="inr-input" placeholder="Enter The Quantity" step="0.01">
+        </div>
+        <p class="approx">≈ <span id="inr-BPay">0.00</span> BPay</p>
+        <button class="btn-primary" id="confirm-inr">Confirm Recharge</button>
+      </div>
+    </section>
+
+    <!-- FLASH MESSAGE -->
+    
+    <!-- PAYMENT MODAL -->
+    <div class="modal-overlay" id="modal">
+      <div class="modal-content">
+        <div class="message" id="modal-msg"></div>
+        <div><strong id="modal-amt"></strong></div>
+        <div class="qr"><img id="modal-qr" src="" alt="QR"></div>
+        <p id="modal-label"></p>
+        <div class="wallet">
+          <span id="modal-addr"></span>
+          <button id="modal-copy">Copy</button>
+        </div>
+        <div class="timer" id="modal-timer">00:59:00</div>
+        <div class="notes">
+          <p>ℹ You pay network fee.</p>
+          <p>ℹ Contact customer service if needed.</p>
+        </div>
+        <button class="submit-btn" id="modal-submit">Submit Payment</button>
+        <button class="close-btn"  id="modal-close">Close</button>
+      </div>
+    </div>
+
+    <!-- HISTORY FILTER -->
+    <section class="history-filter">
+      <button class="active" data-type="deposit">Recharge</button>
+      <button          data-type="withdrawal">Withdraw</button>
+      <button          data-type="other">Other</button>
+    </section>
+
+    <!-- HISTORY CARDS -->
+    <section class="history-container">
+      <div id="transactions-list"></div>
+    </section>
+  </main>
+
+  <!-- BOTTOM NAV -->
+  <!-- bottom_nav.php -->
+<style>
+    /* --- Bottom Nav --- */
+    .bottom-nav {
+        position: fixed;
+        bottom: 0; 
+        left: 0; 
+        right: 0;
+        background: #fff;
+        display: flex;
+        justify-content: space-around;
+        padding: 8px 0;
+        box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.1);
+    }
+    .bottom-nav a {
+        flex: 1;
+        text-align: center;
+        color: #333;
+        font-size: 12px;
+    }
+    .bottom-nav a.active { 
+        color: #3366ff; 
+    }
+    .bottom-nav img { 
+        height: 24px; 
+        display: block; 
+        margin: 0 auto 4px; 
+    }
+</style>
+
+<div class="bottom-nav">
+    <a href="home.php" class="active">
+        <img src="https://img.icons8.com/sf-black-filled/64/228BE6/home.png" alt="Home">
+        <span>Home</span>
+    </a>
+    <a href="transaction_history.php">
+        <img src="https://img.icons8.com/external-sbts2018-lineal-color-sbts2018/58/228BE6/external-add-money-ecommerce-basic-1-sbts2018-lineal-color-sbts2018.png" alt="Transaction">
+        <span>Transaction</span>
+    </a>
+    <a href="payment.php">
+        <img src="https://img.icons8.com/external-kmg-design-glyph-kmg-design/32/228BE6/external-withdraw-finance-2-kmg-design-glyph-kmg-design.png" alt="Payment">
+        <span>Payment</span>
+    </a>
+    <a href="profile.php">
+        <img src="https://img.icons8.com/ios-glyphs/30/228BE6/user--v1.png" alt="Me">
+        <span>Me</span>
+    </a>
+</div>
+
+  <script>
+  (()=>{
+    const usdtRate    = 93,
+          inrRate     = 1,
+          userWallet  = "TEdwBShb1hhMfba9jckU7NyPQXhcXmsTqA",
+          userUpi     = "9354964196@jio",
+          initialHistory = [],
+          rateLine    = document.getElementById('rate-line');
+
+    // Tab switching & rate‐line update
+    document.querySelectorAll('.exchange-tabs button').forEach(btn=>{
+      btn.onclick = ()=>{
+        document.querySelectorAll('.exchange-tabs button')
+                .forEach(x=>x.classList.remove('active'));
+        btn.classList.add('active');
+        const cur = btn.dataset.cur;
+        document.getElementById('form-USDT').style.display = cur==='USDT'?'block':'none';
+        document.getElementById('form-INR').style.display  = cur==='INR' ?'block':'none';
+        // update rate‐line
+        if(cur==='USDT') {
+          rateLine.textContent = `1 USDT ≈ ${usdtRate} BPay`;
+        } else {
+          rateLine.textContent = `1 INR ≈ 1 BPay`;
+        }
+      };
+    });
+
+    // Live BPay calculation
+    document.getElementById('usdt-input').oninput = e=>
+      document.getElementById('usdt-BPay')
+        .textContent = ((parseFloat(e.target.value)||0)*usdtRate).toFixed(2);
+
+    document.getElementById('inr-input').oninput = e=>
+      document.getElementById('inr-BPay')
+        .textContent = ((parseFloat(e.target.value)||0)*inrRate).toFixed(2);
+
+    // Modal plumbing…
+    const modal     = document.getElementById('modal'),
+          msgEl     = document.getElementById('modal-msg'),
+          amtEl     = document.getElementById('modal-amt'),
+          qrEl      = document.getElementById('modal-qr'),
+          lblEl     = document.getElementById('modal-label'),
+          addrEl    = document.getElementById('modal-addr'),
+          copyBtn   = document.getElementById('modal-copy'),
+          timerEl   = document.getElementById('modal-timer'),
+          submitBtn = document.getElementById('modal-submit'),
+          closeBtn  = document.getElementById('modal-close');
+
+    function showModal(cur,amt,xt,addr,label){
+      msgEl.textContent   = `You will receive ${xt.toFixed(2)} BPay — scan to pay.`;
+      amtEl.textContent   = `${amt} ${cur}`;
+      qrEl.src            = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(addr)}`;
+      lblEl.textContent   = label;
+      addrEl.textContent  = addr;
+      timerEl.textContent = '00:59:00';
+      submitBtn.dataset.cur = cur;
+      submitBtn.dataset.amt = amt;
+      modal.style.display  = 'flex';
+      startTimer();
+    }
+    let iv;
+    function startTimer(){
+      let s=59*60; clearInterval(iv);
+      iv=setInterval(()=>{
+        const m = String(Math.floor(s/60)).padStart(2,'0'),
+              sec= String(s%60).padStart(2,'0');
+        timerEl.textContent = `${m}:${sec}`; if(s-->0)return; clearInterval(iv);
+      },1000);
+    }
+
+    document.getElementById('confirm-usdt').onclick = ()=>{
+      const a=parseFloat(document.getElementById('usdt-input').value)||0;
+      showModal('USDT',a,a*usdtRate,userWallet,'Wallet Address (TRC-20)');
+    };
+    document.getElementById('confirm-inr').onclick = ()=>{
+      const a=parseFloat(document.getElementById('inr-input').value)||0;
+      showModal('INR',a,a*inrRate,userUpi,'UPI Address');
+    };
+
+    copyBtn.onclick  = ()=>{ navigator.clipboard.writeText(addrEl.textContent); alert('Copied!'); };
+    closeBtn.onclick = ()=>{ alert('Canceled—will refund if deducted.'); modal.style.display='none'; };
+    submitBtn.onclick= ()=>{
+      alert('Submitted—allow up to 5 mins for approval.');
+      const f=document.createElement('form');
+      ['action','currency','amount'].forEach(n=>{
+        const i=document.createElement('input');
+        i.name=n;
+        i.value= n==='action'      ? 'submit_payment'
+                : n==='currency'   ? submitBtn.dataset.cur
+                : submitBtn.dataset.amt;
+        f.appendChild(i);
+      });
+      f.method='POST'; f.style.display='none'; document.body.appendChild(f); f.submit();
+    };
+
+    // History rendering…
+    let currentHistory = initialHistory;
+    function render(list){
+      const ct  = document.getElementById('transactions-list'),
+            typ = document.querySelector('.history-filter button.active').dataset.type;
+      ct.innerHTML = '';
+      const fil = list.filter(tx=>{
+        if(typ==='deposit')    return tx.transaction_type==='deposit';
+        if(typ==='withdrawal') return tx.transaction_type==='withdrawal';
+        return tx.transaction_type!=='deposit' && tx.transaction_type!=='withdrawal';
+      });
+      if(!fil.length){
+        ct.innerHTML = '<div class="no-data">No transactions here.</div>';
+        return;
+      }
+      fil.forEach(tx=>{
+        const lbl = tx.transaction_type==='deposit'    ? 'Deposit'
+                  : tx.transaction_type==='withdrawal' ? 'Withdrawal'
+                  : 'Other',
+              cur = tx.currency || '';
+        const card = document.createElement('div');
+        card.className = 'tx-card';
+        card.innerHTML=`
+          <div class="tx-info">
+            <div class="tx-date">${tx.created_at}</div>
+            <div class="tx-type">${lbl}</div>
+          </div>
+          <div>
+            <div class="tx-amount">
+              ${parseFloat(tx.amount).toFixed(2)}${cur?' '+cur:''}
+            </div>
+            <div class="tx-status ${tx.status}">${tx.status}</div>
+          </div>`;
+        ct.appendChild(card);
+      });
+    }
+
+    // History filter buttons
+    document.querySelectorAll('.history-filter button').forEach(btn=>{
+      btn.onclick=()=>{
+        document.querySelectorAll('.history-filter button')
+                .forEach(x=>x.classList.remove('active'));
+        btn.classList.add('active');
+        render(currentHistory);
+      };
+    });
+
+    // Poll stats + history
+    async function poll(){
+      try {
+        const [h,s] = await Promise.all([
+          fetch('transaction_history.php?ajax_history=1').then(r=>r.json()),
+          fetch('transaction_history.php?ajax_stats=1').then(r=>r.json())
+        ]);
+        currentHistory = h;
+        render(h);
+        document.getElementById('stat-balance').textContent  = s.balance.toFixed(2);
+        document.getElementById('stat-received').textContent = s.last_deposit.toFixed(2);
+        document.getElementById('stat-profit').textContent   = s.total_profit.toFixed(2);
+      } catch(e){ console.error(e); }
+    }
+
+    render(initialHistory);
+    setInterval(poll,5000);
+
+  })();
+  </script>
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Payment • BPay</title>
+  <style>
+    /* reset & base */
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:Arial,sans-serif;background:#f4f6fa;color:#333;padding-bottom:80px}
+    a{text-decoration:none;color:inherit}
+    /* header */
+    .app-header{background:#fff;text-align:center;padding:16px 0;box-shadow:0 1px 4px rgba(0,0,0,0.1);margin-bottom:16px}
+    .app-logo{height:40px}
+    /* flash */
+    .flash{margin:0 16px 16px;padding:12px;border-radius:8px;font-size:14px;text-align:center}
+    .flash.success{background:#e6ffed;color:#237804}
+    .flash.error  {background:#ffe6e6;color:#a8071a}
+    /* stats */
+    .stats-row{display:flex;gap:12px;padding:0 16px 16px}
+    .stat-card{flex:1;background:#fff;padding:12px;text-align:center;border-radius:12px;box-shadow:0 2px 6px rgba(0,0,0,0.05)}
+    .stat-card .label{font-size:14px;color:#777}
+    .stat-card .value{font-size:24px;color:#237804}
+    /* profiles */
+    .profiles{background:#fff;margin:0 16px 16px;border-radius:12px;box-shadow:0 2px 6px rgba(0,0,0,0.05)}
+    .profiles h2{padding:12px 16px;font-size:16px;border-bottom:1px solid #eee}
+    .profile-item{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid #f0f0f0;cursor:pointer}
+    .profile-item:last-child{border-bottom:none}
+    .profile-type{font-weight:bold}
+    .profile-detail{color:#555;font-size:13px}
+    .profile-actions img{width:20px;height:20px}
+    .btn-add{width:100%;padding:12px;background:#3366FF;color:#fff;border:none;border-radius:0 0 12px 12px;cursor:pointer;font-size:14px}
+    /* modal */
+    .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);align-items:center;justify-content:center;z-index:10}
+    .modal{background:#fff;padding:16px;border-radius:12px;width:90%;max-width:360px}
+    .modal h3{margin-bottom:12px;font-size:18px;text-align:center}
+    .modal .radio-group{display:flex;gap:16px;margin-bottom:12px;justify-content:center}
+    .modal form input,.modal form select{width:100%;padding:8px;margin-bottom:8px;border:1px solid #ccc;border-radius:4px;font-size:14px}
+    .modal .actions{display:flex;gap:8px;margin-top:8px}
+    .modal .actions button{flex:1;padding:8px;border:none;font-size:14px;border-radius:4px;cursor:pointer}
+    .modal .actions .primary{background:#3366FF;color:#fff}
+    .modal .actions .secondary{background:#eee;color:#333}
+    #match-error{display:none;font-size:13px;color:#a8071a;margin-top:-4px;margin-bottom:8px;text-align:center}
+    /* withdraw form */
+    .exchange-card{background:#fff;margin:0 16px 16px;padding:16px;border-radius:12px;box-shadow:0 2px 6px rgba(0,0,0,0.05)}
+    .exchange-card h2{margin-bottom:12px;font-size:16px;font-weight:bold}
+    .exchange-card .error{margin-bottom:12px;color:#a8071a;font-size:14px;text-align:center}
+    .input-group{background:#f9f9f9;padding:8px;border-radius:8px;display:flex;align-items:center;margin-bottom:8px}
+    .input-group select,.input-group input{border:none;background:transparent;outline:none;flex:1;font-size:14px}
+    .input-group .icon{margin-right:8px;font-weight:bold}
+    .btn-submit{width:100%;padding:12px;background:#3366FF;color:#fff;border:none;border-radius:8px;font-size:16px;cursor:pointer}
+    .btn-submit:disabled{background:#ccc;cursor:not-allowed}
+    /* history */
+    .history-container{padding:0 16px 80px}
+    .tx-card{display:grid;grid-template-columns:1fr auto;gap:8px;background:#fff;padding:12px 16px;margin-bottom:8px;border-radius:8px;box-shadow:0 2px 4px rgba(0,0,0,0.05)}
+    .tx-date{font-size:12px;color:#777}
+    .tx-type{font-size:14px;font-weight:bold;text-transform:capitalize}
+    .tx-detail{font-size:13px;color:#555}
+    .tx-amount{font-size:16px;color:#237804;text-align:right}
+    .tx-status{font-size:12px;font-weight:bold;padding:4px 8px;border-radius:8px;text-transform:capitalize;text-align:center}
+    .tx-status.pending{background:#fff7e6;color:#a65a00}
+    .tx-status.approved{background:#e6ffed;color:#237804}
+    .tx-status.rejected{background:#ffe6e6;color:#a8071a}
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="app-header">
+    <a href="home.php"><img src="images/logo.png" alt="XPay" class="app-logo"></a>
+  </header>
+
+  <!-- FLASH -->
+  
+  <!-- STATS -->
+  <section class="stats-row">
+    <div class="stat-card">
+      <p class="label">Available INR</p>
+      <p class="value" id="stat-available">0.00 INR</p>
+    </div>
+    <div class="stat-card">
+      <p class="label">Available USDT</p>
+      <p class="value" id="stat-unavailable">0.00 USDT</p>
+    </div>
+  </section>
+
+  <!-- YOUR METHODS -->
+  <section class="profiles">
+    <h2>Your Payment Methods</h2>
+          <div style="padding:12px;color:#777;">No methods added yet.</div>
+        <button id="btn-add" class="btn-add">+ Add Payment Method</button>
+  </section>
+
+  <!-- ADD / EDIT MODAL -->
+  <div class="modal-overlay" id="modal-add">
+    <div class="modal">
+      <h3 id="modal-add-title">Add Payment Method</h3>
+      <form id="frm-add" method="POST">
+        <input type="hidden" name="action" value="add_profile" id="add-action">
+        <input type="hidden" name="profile_id" id="add-profile-id">
+        <div class="radio-group">
+          <label><input type="radio" name="type" value="UPI" checked> UPI</label>
+          <label><input type="radio" name="type" value="BANK"> Bank</label>
+        </div>
+        <div id="grp-upi">
+          <input type="text" name="upi_address" placeholder="UPI Address" required>
+        </div>
+        <div id="grp-bank" style="display:none">
+          <input type="text" name="account_name"           placeholder="Account Name">
+          <input type="text" name="account_number"         placeholder="Account Number">
+          <input type="text" name="confirm_account_number" placeholder="Confirm Account Number">
+          <div id="match-error">Account numbers must match.</div>
+          <input type="text" name="ifsc_code"              placeholder="IFSC Code">
+          <input type="text" name="phone_number"           placeholder="Phone Number">
+          <input type="email" name="email_address"         placeholder="Email Address">
+        </div>
+        <div class="actions">
+          <button type="submit" class="primary" id="add-submit" disabled>Add</button>
+          <button type="button"  class="secondary" id="add-cancel">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- DETAIL / EDIT / REMOVE MODAL -->
+  <div class="modal-overlay" id="modal-detail">
+    <div class="modal">
+      <h3>Payment Method Details</h3>
+      <div id="detail-content" style="margin-bottom:12px;font-size:14px;color:#555"></div>
+      <form method="POST">
+        <input type="hidden" name="action" value="remove_profile">
+        <input type="hidden" name="profile_id" id="detail-pid">
+        <div class="actions">
+          <button type="button" class="secondary" id="detail-edit">Edit</button>
+          <button type="submit" class="primary">Remove</button>
+          <button type="button" class="secondary" id="detail-close">Close</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  
+
+  <!-- WITHDRAWAL HISTORY -->
+  <section class="history-container">
+    <h2>Withdrawal History</h2>
+    <div id="transactions-list"></div>
+  </section>
+
+  <!-- bottom_nav.php -->
+<style>
+    /* --- Bottom Nav --- */
+    .bottom-nav {
+        position: fixed;
+        bottom: 0; 
+        left: 0; 
+        right: 0;
+        background: #fff;
+        display: flex;
+        justify-content: space-around;
+        padding: 8px 0;
+        box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.1);
+    }
+    .bottom-nav a {
+        flex: 1;
+        text-align: center;
+        color: #333;
+        font-size: 12px;
+    }
+    .bottom-nav a.active { 
+        color: #3366ff; 
+    }
+    .bottom-nav img { 
+        height: 24px; 
+        display: block; 
+        margin: 0 auto 4px; 
+    }
+</style>
+
+<div class="bottom-nav">
+    <a href="home.php" class="active">
+        <img src="https://img.icons8.com/sf-black-filled/64/228BE6/home.png" alt="Home">
+        <span>Home</span>
+    </a>
+    <a href="transaction_history.php">
+        <img src="https://img.icons8.com/external-sbts2018-lineal-color-sbts2018/58/228BE6/external-add-money-ecommerce-basic-1-sbts2018-lineal-color-sbts2018.png" alt="Transaction">
+        <span>Transaction</span>
+    </a>
+    <a href="payment.php">
+        <img src="https://img.icons8.com/external-kmg-design-glyph-kmg-design/32/228BE6/external-withdraw-finance-2-kmg-design-glyph-kmg-design.png" alt="Payment">
+        <span>Payment</span>
+    </a>
+    <a href="profile.php">
+        <img src="https://img.icons8.com/ios-glyphs/30/228BE6/user--v1.png" alt="Me">
+        <span>Me</span>
+    </a>
+</div>
+
+  <script>
+    const $ = s=>document.querySelector(s),
+          $$=s=>document.querySelectorAll(s);
+
+    // — Add/Edit Modal Logic —
+    const modalAdd      = $('#modal-add'),
+          addTitle      = $('#modal-add-title'),
+          addForm       = $('#frm-add'),
+          addAction     = $('#add-action'),
+          addProfileId  = $('#add-profile-id'),
+          btnAdd        = $('#btn-add'),
+          btnCancel     = $('#add-cancel'),
+          radios        = $$('[name="type"]'),
+          grpUpi        = $('#grp-upi'),
+          grpBank       = $('#grp-bank'),
+          upiFld        = grpUpi.querySelector('input'),
+          acctFld       = grpBank.querySelector('[name="account_name"]'),
+          numFld        = grpBank.querySelector('[name="account_number"]'),
+          cnfFld        = grpBank.querySelector('[name="confirm_account_number"]'),
+          ifscFld       = grpBank.querySelector('[name="ifsc_code"]'),
+          phoneFld      = grpBank.querySelector('[name="phone_number"]'),
+          emailFld      = grpBank.querySelector('[name="email_address"]'),
+          matchError    = $('#match-error'),
+          addSubmitBtn  = $('#add-submit');
+
+    // NEW helper: keep required/disabled in sync
+    function syncValidationFlags(){
+      const showUPI  = grpUpi.style.display==='block';
+      const showBank = grpBank.style.display==='block';
+
+      upiFld.required = showUPI;
+      upiFld.disabled = !showUPI;
+
+      [acctFld,numFld,cnfFld,ifscFld,phoneFld,emailFld].forEach(f=>{
+        f.required = showBank && ['account_name','account_number','confirm_account_number','ifsc_code'].includes(f.name);
+        f.disabled = !showBank;
+      });
+    }
+
+    function checkMatch(){
+      if(grpBank.style.display==='block'){
+        if(numFld.value && cnfFld.value && numFld.value===cnfFld.value){
+          matchError.style.display='none';
+          addSubmitBtn.disabled=false;
+        } else {
+          matchError.style.display='block';
+          addSubmitBtn.disabled=true;
+        }
+      } else {
+        addSubmitBtn.disabled = !(upiFld.value.trim().length>0);
+      }
+    }
+
+    function openAdd(isNew, p=null){
+      modalAdd.style.display='flex';
+      addForm.reset();
+      matchError.style.display='none';
+      addSubmitBtn.disabled=true;
+
+      if(isNew){
+        addTitle.textContent='Add Payment Method';
+        addAction.value='add_profile';
+        grpUpi.style.display='block';
+        grpBank.style.display='none';
+      } else {
+        addTitle.textContent='Edit Payment Method';
+        addAction.value='edit_profile';
+        addProfileId.value=p.id;
+        radios.forEach(r=> r.checked = (r.value===p.type));
+        if(p.type==='UPI'){
+          grpUpi.style.display='block';
+          grpBank.style.display='none';
+          upiFld.value=p.upi_address;
+        } else {
+          grpUpi.style.display='none';
+          grpBank.style.display='block';
+          acctFld.value   = p.account_name;
+          numFld.value    = p.account_number;
+          cnfFld.value    = p.account_number;
+          ifscFld.value   = p.ifsc_code;
+          phoneFld.value  = p.phone_number;
+          emailFld.value  = p.email_address;
+        }
+      }
+
+      // **CRUCIAL** sync after show/hide
+      syncValidationFlags();
+      checkMatch();
+    }
+
+    btnAdd.onclick    = ()=> openAdd(true);
+    btnCancel.onclick = ()=> modalAdd.style.display='none';
+
+    radios.forEach(r=> r.addEventListener('change', ()=>{
+      const isUPI = $('input[name="type"]:checked').value==='UPI';
+      grpUpi.style.display  = isUPI?'block':'none';
+      grpBank.style.display = isUPI?'none':'block';
+      syncValidationFlags();
+      checkMatch();
+    }));
+
+    [upiFld,numFld,cnfFld].forEach(f=>f.addEventListener('input',checkMatch));
+
+    // — Detail Modal Logic —
+    const modalDetail    = $('#modal-detail'),
+          detailCnt      = $('#detail-content'),
+          detailPid      = $('#detail-pid'),
+          btnDetailClose = $('#detail-close'),
+          btnDetailEdit  = $('#detail-edit');
+    let currentProfile = null;
+    function openDetailModal(p){
+      currentProfile = p;
+      let html = '';
+      if(p.type==='BANK'){
+        html += `<p><strong>Account Name:</strong> ${p.account_name}</p>`;
+        html += `<p><strong>Account Number:</strong> ${p.account_number}</p>`;
+        html += `<p><strong>IFSC Code:</strong> ${p.ifsc_code}</p>`;
+        if(p.phone_number) html+=`<p><strong>Phone:</strong> ${p.phone_number}</p>`;
+        if(p.email_address)html+=`<p><strong>Email:</strong> ${p.email_address}</p>`;
+      } else {
+        html += `<p><strong>UPI Address:</strong> ${p.upi_address}</p>`;
+      }
+      detailCnt.innerHTML=html;
+      detailPid.value=p.id;
+      modalDetail.style.display='flex';
+    }
+    btnDetailClose.onclick = ()=> modalDetail.style.display='none';
+    btnDetailEdit.onclick  = ()=>{
+      modalDetail.style.display='none';
+      openAdd(false, currentProfile);
+    };
+
+    // — History & Stats Polling (unchanged) —
+   let history = [];
+
+function renderHistory() {
+  const ct = $('#transactions-list');
+  ct.innerHTML = '';
+  
+  if (!history.length) {
+    ct.innerHTML = '<div style="padding:12px;color:#777">No withdrawals yet.</div>';
+    return;
+  }
+
+  history.forEach(tx => {
+    const d = document.createElement('div');
+    d.className = 'tx-card';
+    d.innerHTML = `
+      <div>
+        <div class="tx-date">${tx.created_at}</div>
+        <div class="tx-type">Withdrawal</div>
+        <div class="tx-detail">${tx.detail || ''}</div>
+      </div>
+      <div>
+        <div class="tx-amount">${parseFloat(tx.amount).toFixed(2)} INR</div>
+        <div class="tx-status ${tx.status}">${tx.status}</div>
+      </div>`;
+    ct.appendChild(d);
+  });
+}
+
+    async function poll(){
+      try {
+        let s = await fetch('payment.php?ajax_stats=1').then(r=>r.json());
+        $('#stat-available').textContent   = s.available.toFixed(2) + ' INR';
+        $('#stat-unavailable').textContent = s.unavailable.toFixed(2) + ' USDT';
+        history = await fetch('payment.php?ajax_history=1').then(r=>r.json());
+        renderHistory();
+      }catch(e){console.error(e)}
+    }
+    renderHistory();
+    setInterval(poll,5000);
+
+    // — Withdraw Form Validation (unchanged) —
+    const frmW = $('#frm-withdraw');
+    if(frmW){
+      frmW.addEventListener('submit',e=>{
+        e.preventDefault();
+        const errDiv=$('#withdraw-error'),
+              sel  =$('#sel-method').value,
+              amt  =parseFloat($('#inp-amount').value),
+              avail =parseFloat($('#stat-available').textContent);
+        let msg='';
+        if(!sel)           msg='Please select a payment method.';
+        else if(!amt)      msg='Please enter an amount.';
+        else if(amt<1)     msg='Amount must be at least 1.';
+        else if(amt>avail) msg=`Cannot exceed available (${avail.toFixed(2)}).`;
+        if(msg){
+          errDiv.textContent=msg;
+          errDiv.style.display='block';
+        } else frmW.submit();
+      });
+      $('#inp-amount').addEventListener('input',()=>$('#withdraw-error').style.display='none');
+      $('#sel-method').addEventListener('change', ()=>$('#withdraw-error').style.display='none');
+    }
+  </script>
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Me • BPay</title>
+  <style>
+    /* RESET & BASE */
+    * { box-sizing:border-box; margin:0; padding:0 }
+    body { font:16px/1.5 "Segoe UI",sans-serif; background:#f4f6fa; color:#333; }
+    a { color:inherit; text-decoration:none; }
+    img { display:block; }
+
+    /* HEADER BAR */
+    .header-main {
+      background: linear-gradient(90deg,#4D8FFF,#8F4FFF);
+      padding:16px; text-align:center;
+    }
+    .header-main img { height:24px; }
+
+    /* SECTION HEADER */
+    .header-sec {
+      background:#fff; display:flex; align-items:center;
+      padding:12px 16px; box-shadow:0 1px 4px rgba(0,0,0,0.1);
+    }
+    .header-sec .back {
+      width:20px; margin-right:12px; cursor:pointer;
+    }
+    .header-sec h1 {
+      flex:1; font-size:18px; font-weight:500; color:#111;
+    }
+
+    /* BOTTOM NAV */
+    .nav-bottom {
+      position:fixed; bottom:0; left:0; right:0; display:flex;
+      background:#fff; box-shadow:0 -1px 4px rgba(0,0,0,0.1);
+    }
+    .nav-bottom a {
+      flex:1; text-align:center; padding:8px 0;
+      font-size:12px; color:#555;
+    }
+    .nav-bottom a.active { color:#4D8FFF; }
+
+    /* CARD */
+    .card {
+      background:#fff; border-radius:12px; margin:16px;
+      padding:16px; box-shadow:0 2px 6px rgba(0,0,0,0.05);
+    }
+
+    /* MAIN “Me” */
+    .me-card {
+      display:flex; align-items:center;
+    }
+    .me-card img { width:40px; margin-right:12px; }
+    .me-info { flex:1; }
+    .me-info .title { font-size:16px; color:#111; }
+    .me-info .subtitle { font-size:14px; color:#777; margin-top:4px; }
+    .me-id { font-size:14px; color:#aaa; }
+
+    /* MENU */
+    .menu-list {
+      list-style:none;
+    }
+    .menu-list li {
+      display:flex; align-items:center; justify-content:space-between;
+      background:#fff; margin:0 16px; padding:12px 16px;
+      border-bottom:1px solid #eee; cursor:pointer;
+    }
+    .menu-list li:last-child{border-bottom:none;}
+    .menu-list .icon { width:24px; margin-right:12px; }
+    .menu-list .text { flex:1; font-size:16px; color:#111; }
+    .menu-list .arrow{ width:16px; opacity:0.5; }
+
+    /* TABS */
+    .tabs { display:flex; margin:16px; background:#fff; border-radius:8px; overflow:hidden; box-shadow:0 2px 4px rgba(0,0,0,0.05); }
+    .tabs button {
+      flex:1; padding:12px; border:none; background:transparent;
+      font-size:14px; cursor:pointer; color:#555;
+    }
+    .tabs button.active {
+      color:#4D8FFF; border-bottom:2px solid #4D8FFF;
+    }
+
+    /* SEARCH BAR */
+    .search-wrap {
+      display:flex; align-items:center; background:#fff;
+      margin:0 16px; padding:8px 12px; border-radius:8px;
+      box-shadow:0 2px 4px rgba(0,0,0,0.05); margin-top:8px;
+    }
+    .search-wrap input {
+      flex:1; border:none; outline:none; font-size:14px;
+    }
+    .search-wrap .caret { font-size:12px; color:#aaa; }
+
+    /* TOTAL */
+    .total-bar {
+      background:#fff; margin:8px 16px; padding:12px 16px;
+      border-radius:8px; box-shadow:0 2px 4px rgba(0,0,0,0.05);
+      display:flex; justify-content:space-between; font-size:14px; color:#555;
+    }
+
+    /* EMPTY STATE */
+    .empty {
+      text-align:center; color:#aaa; padding:48px 16px; font-size:14px;
+    }
+    .empty img { width:80px; margin:0 auto 16px; opacity:0.2; }
+
+    /* TASKS */
+    .task-nav {
+      display:flex; gap:12px; margin:16px;
+    }
+    .task-nav button {
+      flex:1; background:#fff; padding:12px;
+      border-radius:12px; box-shadow:0 2px 6px rgba(0,0,0,0.05);
+      font-size:14px; cursor:pointer;
+    }
+    .task-banner {
+      background:#F0F7FF; color:#FF4D4F; text-align:center;
+      margin:0 16px; padding:12px; border-radius:8px; font-size:14px;
+    }
+    .filter-wrap {
+      display:flex; align-items:center; gap:8px; margin:16px;
+      background:#fff; padding:8px 12px; border-radius:8px;
+      box-shadow:0 2px 4px rgba(0,0,0,0.05);
+    }
+    .filter-wrap select, .filter-wrap input {
+      border:1px solid #DDD; border-radius:4px; padding:4px 8px; font-size:14px;
+    }
+    .filter-wrap button {
+      margin-left:auto; background:#4D8FFF; color:#fff;
+      border:none; padding:6px 12px; border-radius:4px; cursor:pointer;
+    }
+  </style>
+</head>
+<body>
+ <style>
+  .app-header {
+    width: 100%;
+    background-color: #fff;
+    padding: 16px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  }
+  .app-logo {
+    height: 40px;
+  }
+</style>
+
+<header class="app-header">
+  <a href="home.php">
+    <img src="images/logo.png" alt="BPay" class="app-logo">
+  </a>
+</header>
+  <!-- bottom_nav.php -->
+<style>
+    /* --- Bottom Nav --- */
+    .bottom-nav {
+        position: fixed;
+        bottom: 0; 
+        left: 0; 
+        right: 0;
+        background: #fff;
+        display: flex;
+        justify-content: space-around;
+        padding: 8px 0;
+        box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.1);
+    }
+    .bottom-nav a {
+        flex: 1;
+        text-align: center;
+        color: #333;
+        font-size: 12px;
+    }
+    .bottom-nav a.active { 
+        color: #3366ff; 
+    }
+    .bottom-nav img { 
+        height: 24px; 
+        display: block; 
+        margin: 0 auto 4px; 
+    }
+</style>
+
+<div class="bottom-nav">
+    <a href="home.php" class="active">
+        <img src="https://img.icons8.com/sf-black-filled/64/228BE6/home.png" alt="Home">
+        <span>Home</span>
+    </a>
+    <a href="transaction_history.php">
+        <img src="https://img.icons8.com/external-sbts2018-lineal-color-sbts2018/58/228BE6/external-add-money-ecommerce-basic-1-sbts2018-lineal-color-sbts2018.png" alt="Transaction">
+        <span>Transaction</span>
+    </a>
+    <a href="payment.php">
+        <img src="https://img.icons8.com/external-kmg-design-glyph-kmg-design/32/228BE6/external-withdraw-finance-2-kmg-design-glyph-kmg-design.png" alt="Payment">
+        <span>Payment</span>
+    </a>
+    <a href="profile.php">
+        <img src="https://img.icons8.com/ios-glyphs/30/228BE6/user--v1.png" alt="Me">
+        <span>Me</span>
+    </a>
+</div>
+      <!-- MAIN “Me” -->
+
+    <div class="card me-card">
+      <img src="assets/icons/user-circle.png" alt="">
+      <div class="me-info">
+        <div class="title">Reward ratio</div>
+        <div class="subtitle">0.50%</div>
+      </div>
+      <div class="me-id">56</div>
+    </div>
+
+    <ul class="menu-list">
+  <li  onclick="location='profile.php?section=order'">
+  <img class="icon" src="assets/icons/order-history.png" alt="">
+  <div class="text">Order History</div>
+  <img class="arrow" src="assets/icons/chevron-right.png" alt="">
+</li>
+  <li  onclick="location='profile.php?section=recharge'">
+  <img class="icon" src="assets/icons/recharge-history.png" alt="">
+  <div class="text">Recharge History</div>
+  <img class="arrow" src="assets/icons/chevron-right.png" alt="">
+</li>
+  <li  onclick="location='profile.php?section=Withdraw'">
+  <img class="icon" src="assets/icons/token-history.png" alt="">
+  <div class="text">Withdraw History</div>
+  <img class="arrow" src="assets/icons/chevron-right.png" alt="">
+</li>
+  <li  onclick="location='profile.php?section=tasks'">
+  <img class="icon" src="assets/icons/tasks.png" alt="">
+  <div class="text">Tasks</div>
+  <img class="arrow" src="assets/icons/chevron-right.png" alt="">
+</li>
+  <li  onclick="location='profile.php?section=team'">
+  <img class="icon" src="assets/icons/team.png" alt="">
+  <div class="text">My Team</div>
+  <img class="arrow" src="assets/icons/chevron-right.png" alt="">
+</li>
+  <li  onclick="location='profile.php?section=account'">
+  <img class="icon" src="assets/icons/id-card.png" alt="">
+  <div class="text">Account Info</div>
+  <img class="arrow" src="assets/icons/chevron-right.png" alt="">
+</li>
+  <li onclick="openShare()" style="cursor:pointer;" >
+  <img class="icon" src="assets/icons/contact-us.png" alt="">
+  <div class="text">Contact Us</div>
+  <img class="arrow" src="assets/icons/chevron-right.png" alt="">
+</li>
+  <li  onclick="location='logout.php'">
+  <img class="icon" src="assets/icons/sign-out.png" alt="">
+  <div class="text">Sign Out</div>
+  <img class="arrow" src="assets/icons/chevron-right.png" alt="">
+</li>
+  </ul>
+
+  
+  <!-- SHARE OVERLAY -->
+<div id="shareOverlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.3); align-items:center; justify-content:center;">
+  <div style="background:#fff; padding:16px; border-radius:12px; position:relative; width:90%; max-width:320px;">
+    <!-- Close Button -->
+    <div style="position:absolute; top:8px; right:12px; font-size:24px; cursor:pointer;" onclick="closeShare()">✕</div>
+
+    <!-- Share Options -->
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; text-align:center; margin-top:24px;">
+      
+      <!-- Telegram Share Option -->
+      <div onclick="share('telegram')" style="cursor:pointer; display: flex; align-items: center; justify-content: center; gap: 8px; text-align:center;">
+        <img src="assets/icons/telegram.png" width="48" alt="Telegram" style="display:block;">
+        <div style="font-size: 16px;">Telegram</div>
+      </div>
+
+      <!-- WhatsApp Share Option -->
+      <div onclick="share('whatsapp')" style="cursor:pointer; display: flex; align-items: center; justify-content: center; gap: 8px; text-align:center;">
+        <img src="assets/icons/whatsapp.png" width="48" alt="WhatsApp" style="display:block;">
+        <div style="font-size: 16px;">WhatsApp</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<script>
+  // Function to open the share overlay when 'Contact Us' is clicked
+  function openShare() {
+    document.getElementById('shareOverlay').style.display = 'flex';
+  }
+
+  // Function to close the share overlay
+  function closeShare() {
+    document.getElementById('shareOverlay').style.display = 'none';
+  }
+
+  // Function to share via Telegram or WhatsApp
+  function share(app) {
+    const url = encodeURIComponent(window.location.href + '?ref=56');
+    const text = encodeURIComponent('Check out Bpay!');
+    
+    let link = '';
+    if (app === 'telegram') {
+      // For Telegram
+      link = `https://t.me/bpayexchangeofficial`;
+    } else if (app === 'whatsapp') {
+      // For WhatsApp
+      link = `https://wa.me/+85257111754?text=${text}%20${url}`;
+    }
+
+    // Open the share link in a new tab
+    window.open(link, '_blank');
+  }
+</script>
+
+</body>
+</html>
